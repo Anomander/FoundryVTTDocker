@@ -1,0 +1,16 @@
+# Secrets - never commit
+.env
+
+# Foundry release zips — large binaries, never commit to git.
+# Zips are uploaded directly to GitHub Releases via update-release.sh.
+dist/
+release/*.zip
+
+# Foundry user data - worlds, modules, systems (for bind-mount dev setups)
+data/
+
+# Backup archives
+backups/
+
+# macOS
+.DS_Store

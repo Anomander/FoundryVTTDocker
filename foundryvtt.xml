@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  Foundry VTT – Unraid Docker Template
+  ======================================
+  BEFORE adding this container in Unraid:
+
+    1. Build and push the image from your local machine (see README.md).
+       This creates:  ghcr.io/<you>/foundryvtt-docker:<version>
+
+    2. Update the <Repository> tag below to match the version you pushed.
+
+    3. Copy this file to:
+         /boot/config/plugins/dockerMan/templates-user/foundryvtt.xml
+
+    4. In Unraid → Docker tab → "Add Container" → select "foundryvtt"
+       from the template dropdown.
+
+  Since the image is public on ghcr.io, Unraid needs no credentials to pull.
+
+  To upgrade:
+    - Build and push a new version from your local machine.
+    - Edit the container in Unraid, update the Repository tag, click Apply.
+    - Unraid will pull and restart automatically.
+-->
+<Container version="2">
+  <Name>foundryvtt</Name>
+
+  <!--
+    Image built by GitHub Actions and pushed to ghcr.io.
+    Format: ghcr.io/<github-username>/foundryvtt:<version>
+
+    - Update this value after each CI build to match the version you want to run.
+    - The exact tag to use is printed in the GitHub Actions job summary after each build.
+    - Use the versioned tag (not :latest) so you always know what is running.
+
+    Example: ghcr.io/anomander/foundryvtt:13.351
+  -->
+  <Repository>ghcr.io/GITHUB_USERNAME/foundryvtt:13.351</Repository>
+
+  <Registry>https://ghcr.io</Registry>
+
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+
+  <Overview>
+    Foundry Virtual Tabletop – self-hosted game server.
+    Image is built locally from the official Foundry release zip and pushed to ghcr.io.
+    See the project README for build and upgrade instructions.
+  </Overview>
+
+  <!-- Opens Foundry in browser when you click the container icon in Unraid -->
+  <WebUI>http://[IP]:[PORT:30000]/</WebUI>
+
+  <!-- ── Ports ─────────────────────────────────────────────────────────── -->
+  <Config
+    Name="Web Port"
+    Target="30000"
+    Default="30000"
+    Mode="tcp"
+    Description="Host port that Foundry listens on. Your reverse proxy should forward here. Change the left (host) side if 30000 is already in use."
+    Type="Port"
+    Display="always"
+    Required="true"
+    Mask="false">30000</Config>
+
+  <!-- ── Paths ─────────────────────────────────────────────────────────── -->
+  <Config
+    Name="Data Path"
+    Target="/data"
+    Default="/mnt/user/appdata/foundryvtt"
+    Mode="rw"
+    Description="Host path for Foundry user data: worlds, modules, systems, and configuration. Survives container upgrades."
+    Type="Path"
+    Display="always"
+    Required="true"
+    Mask="false">/mnt/user/appdata/foundryvtt</Config>
+
+  <!-- ── Environment Variables ─────────────────────────────────────────── -->
+  <Config
+    Name="Admin Key"
+    Target="FOUNDRY_ADMIN_KEY"
+    Default="changeme"
+    Mode=""
+    Description="Password for the Foundry /setup admin page. Set a strong value before first run."
+    Type="Variable"
+    Display="always"
+    Required="true"
+    Mask="true">changeme</Config>
+
+</Container>
