@@ -1,64 +1,48 @@
 <?xml version="1.0"?>
-<!--
-  Foundry VTT – Unraid Docker Template
-  ======================================
-  BEFORE adding this container in Unraid:
-
-    1. Build and push the image from your local machine (see README.md).
-       This creates:  ghcr.io/<you>/foundryvtt-docker:<version>
-
-    2. Update the <Repository> tag below to match the version you pushed.
-
-    3. Copy this file to:
-         /boot/config/plugins/dockerMan/templates-user/foundryvtt.xml
-
-    4. In Unraid → Docker tab → "Add Container" → select "foundryvtt"
-       from the template dropdown.
-
-  Since the image is public on ghcr.io, Unraid needs no credentials to pull.
-
-  To upgrade:
-    - Build and push a new version from your local machine.
-    - Edit the container in Unraid, update the Repository tag, click Apply.
-    - Unraid will pull and restart automatically.
--->
 <Container version="2">
   <Name>foundryvtt</Name>
 
   <!--
-    Image built by GitHub Actions and pushed to ghcr.io.
-    Format: ghcr.io/<github-username>/foundryvtt:<version>
-
-    - Update this value after each CI build to match the version you want to run.
-    - The exact tag to use is printed in the GitHub Actions job summary after each build.
-    - Use the versioned tag (not :latest) so you always know what is running.
-
-    Example: ghcr.io/anomander/foundryvtt:13.351
+    Update this to the version tag printed by GitHub Actions after each build.
+    Format: ghcr.io/Anomander/foundryvtt:<version>
   -->
-  <Repository>ghcr.io/GITHUB_USERNAME/foundryvtt:13.351</Repository>
-
+  <Repository>ghcr.io/anomander/foundryvtt:13.351</Repository>
   <Registry>https://ghcr.io</Registry>
+
+  <!--
+    Hosting this file on GitHub lets Unraid load it directly by URL.
+    Community Applications → "Add template from URL" → paste the raw GitHub URL.
+  -->
+  <TemplateURL>https://raw.githubusercontent.com/Anomander/FoundryVTTDocker/main/foundryvtt.xml</TemplateURL>
+
+  <!-- Foundry VTT official icon -->
+  <Icon>https://foundryvtt.com/static/assets/icons/fvtt.png</Icon>
+
+  <Overview>
+    Foundry Virtual Tabletop – self-hosted tabletop RPG game server.&#xA;&#xA;
+    This image is built from the official Foundry release zip via GitHub Actions and published to ghcr.io.&#xA;
+    See https://github.com/Anomander/FoundryVTTDocker for upgrade instructions.
+  </Overview>
+
+  <Category>GameServers:</Category>
 
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
 
-  <Overview>
-    Foundry Virtual Tabletop – self-hosted game server.
-    Image is built locally from the official Foundry release zip and pushed to ghcr.io.
-    See the project README for build and upgrade instructions.
-  </Overview>
-
-  <!-- Opens Foundry in browser when you click the container icon in Unraid -->
+  <!-- Opens Foundry in the browser when you click the container icon in Unraid -->
   <WebUI>http://[IP]:[PORT:30000]/</WebUI>
 
-  <!-- ── Ports ─────────────────────────────────────────────────────────── -->
+  <Support>https://github.com/Anomander/FoundryVTTDocker</Support>
+  <Project>https://foundryvtt.com</Project>
+
+  <!-- ── Ports ──────────────────────────────────────────────────────────── -->
   <Config
     Name="Web Port"
     Target="30000"
     Default="30000"
     Mode="tcp"
-    Description="Host port that Foundry listens on. Your reverse proxy should forward here. Change the left (host) side if 30000 is already in use."
+    Description="Host port Foundry listens on. Point your reverse proxy here. Change only the left (host) side if 30000 is already in use."
     Type="Port"
     Display="always"
     Required="true"
@@ -70,7 +54,7 @@
     Target="/data"
     Default="/mnt/user/appdata/foundryvtt"
     Mode="rw"
-    Description="Host path for Foundry user data: worlds, modules, systems, and configuration. Survives container upgrades."
+    Description="Host path for Foundry user data: worlds, modules, systems, and config. This directory survives container upgrades."
     Type="Path"
     Display="always"
     Required="true"
@@ -80,12 +64,12 @@
   <Config
     Name="Admin Key"
     Target="FOUNDRY_ADMIN_KEY"
-    Default="changeme"
+    Default=""
     Mode=""
     Description="Password for the Foundry /setup admin page. Set a strong value before first run."
     Type="Variable"
     Display="always"
     Required="true"
-    Mask="true">changeme</Config>
+    Mask="true"></Config>
 
 </Container>
