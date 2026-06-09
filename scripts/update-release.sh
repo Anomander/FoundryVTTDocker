@@ -64,7 +64,7 @@ fi
 
 # ── Check tag doesn't already exist ───────────────────────────────────────
 TAG="v${VERSION}"
-if gh release view "${TAG}" --repo "${ROOT_DIR}" &>/dev/null 2>&1; then
+if gh release view "${TAG}" &>/dev/null 2>&1; then
   echo "ERROR: Release ${TAG} already exists."
   echo "  To overwrite: gh release delete ${TAG} --yes --repo <repo>"
   exit 1
@@ -79,7 +79,6 @@ echo ""
 echo "Uploading to GitHub Release (this may take a minute)..."
 
 gh release create "${TAG}" "${ZIP_SOURCE}" \
-  --repo "${ROOT_DIR}" \
   --title "Foundry VTT ${VERSION}" \
   --notes "Foundry VTT ${VERSION} release artifact.
 
