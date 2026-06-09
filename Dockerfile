@@ -25,18 +25,18 @@ RUN apt-get update \
 
 WORKDIR /foundry
 
-# The zip is placed here by ./scripts/update-release.sh and stored via Git LFS.
+# The zip is downloaded from the GitHub Release by CI and placed here.
 # See README.md for the full workflow.
 COPY release/foundryvtt.zip ./foundryvtt.zip
 RUN unzip -q foundryvtt.zip \
     && rm foundryvtt.zip
 
-# Create a dedicated non-root user and a persistent data directory.
-RUN useradd --system --uid 1000 --no-create-home foundry \
-    && mkdir -p /data \
-    && chown -R foundry:foundry /foundry /data
+# The official node:*-slim image already ships with a 'node' user at UID 1000.
+# Reuse it rather than creating a second user at the same UID.
+RUN mkdir -p /data \
+    && chown -R node:node /foundry /data
 
-USER foundry
+USER node
 
 # /data holds worlds, systems, modules, and config – mount a volume here.
 VOLUME /data
