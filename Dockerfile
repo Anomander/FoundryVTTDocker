@@ -10,8 +10,8 @@
 #     -t foundryvtt:$(cat release/version) .
 # ---------------------------------------------------------------------------
 
-# Foundry V12+ requires Node 20. Use node:18-slim for V11 or older.
-ARG NODE_VERSION=20
+# Foundry V13+ requires Node 24. Use node:20-slim for V12 or older.
+ARG NODE_VERSION=24
 FROM node:${NODE_VERSION}-slim
 
 # Re-declare after FROM so it is in scope during build
@@ -31,12 +31,9 @@ COPY release/foundryvtt.zip ./foundryvtt.zip
 RUN unzip -q foundryvtt.zip \
     && rm foundryvtt.zip
 
-# The official node:*-slim image already ships with a 'node' user at UID 1000.
-# Reuse it rather than creating a second user at the same UID.
-RUN mkdir -p /data \
-    && chown -R node:node /foundry /data
-
-USER node
+# Running as root is intentional: Unraid manages host directory permissions
+# and bind-mounted paths are owned by root by default. Running non-root
+# causes EACCES on /data at startup. This is standard for Unraid containers.
 
 # /data holds worlds, systems, modules, and config – mount a volume here.
 VOLUME /data
